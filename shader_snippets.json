@@ -1,0 +1,55 @@
+{
+  "description": "Copy-paste GLSL code blocks for common patterns",
+  "snippets": [
+    {
+      "name": "Proximity Check",
+      "category": "Spatial",
+      "code": "float dist = length(p1 - p2);\nfloat connect = step(dist, 0.02); // threshold\nvec3 color = mix(vec3(0), lineColor, connect);"
+    },
+    {
+      "name": "Modulo Spawn",
+      "category": "Temporal",
+      "code": "float phase = mod(iTime * speed + float(id) * offset, period);\nfloat active = step(phase, 0.1); // brief spawn window"
+    },
+    {
+      "name": "Noise Mask",
+      "category": "Geometry",
+      "code": "float n = noise3D(pos * scale);\nfloat visible = step(0.4, n) * (1.0 - step(0.6, n));\n// Only render where 0.4 < noise < 0.6"
+    },
+    {
+      "name": "Stepped Alpha",
+      "category": "Rendering",
+      "code": "float life = age / maxAge;\nfloat alpha = life < 0.5 ? 1.0 : smoothstep(0.5, 1.0, life);\nalpha = 1.0 - alpha; // invert for fade out"
+    },
+    {
+      "name": "Frame Seeded Random",
+      "category": "Pipeline",
+      "code": "float hash(vec2 p) {\n    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);\n}\nfloat seededRandom = hash(vec2(float(id), iTime * 60.0));"
+    },
+    {
+      "name": "Spiral Spawn",
+      "category": "Temporal",
+      "code": "float angle = iTime * 14.4;\nfloat radius = mod(iTime * 3.0, 360.0);\nvec2 spawnPos = vec2(cos(angle), sin(angle)) * radius * 0.01;"
+    },
+    {
+      "name": "Heart SDF",
+      "category": "Shape",
+      "code": "float heartSDF(vec2 p) {\n    p.y = -p.y;\n    float a = p.x * p.x + p.y * p.y - 0.25;\n    return a * a * a - p.x * p.x * p.y * p.y * p.y;\n}"
+    },
+    {
+      "name": "Tunnel Perspective",
+      "category": "Spatial",
+      "code": "float z = fract(iTime * speed + objectId * spacing);\nfloat scale = 1.0 / (z + 0.1);\nvec2 pos = (worldPos - 0.5) * scale + 0.5;\nfloat alpha = smoothstep(0, 0.1, z) * smoothstep(1.0, 0.9, z);"
+    },
+    {
+      "name": "Wireframe Overlay",
+      "category": "Rendering",
+      "code": "vec3 d = fwidth(barycentric);\nvec3 edge = smoothstep(vec3(0.0), d * 1.5, barycentric);\nfloat edgeFactor = min(min(edge.x, edge.y), edge.z);\nvec3 wireframe = mix(vec3(1.0), solidColor, edgeFactor);"
+    },
+    {
+      "name": "Hexagon Grid",
+      "category": "Geometry",
+      "code": "vec2 hexUV = hexGrid(uv * 10.0);\nfloat hexDist = hexSDF(hexUV);\nfloat hex = smoothstep(0.1, 0.0, hexDist);"
+    }
+  ]
+}

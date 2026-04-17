@@ -1,0 +1,125 @@
+{
+  "description": "Match emotional qualities to principles",
+  "moods": {
+    "ethereal_ghostly": {
+      "principles": [
+        "MODULO_SPAWN_PHASE_SHIFT",
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "BLEND_MODE_MOOD_MAPPING"
+      ],
+      "blend_mode": "ADD",
+      "colors": [
+        "#E0F7FA",
+        "#B2EBF2",
+        "#80DEEA"
+      ],
+      "description": "Light, floating, barely there"
+    },
+    "aggressive_cutting": {
+      "principles": [
+        "PROXIMITY_THRESHOLD_CONNECTION",
+        "PRINT_TEXT_GENERATIVE",
+        "BLEND_MODE_MOOD_MAPPING"
+      ],
+      "blend_mode": "SUBTRACT",
+      "colors": [
+        "#FF0000",
+        "#000000",
+        "#FFFFFF"
+      ],
+      "description": "Harsh, confrontational, stark"
+    },
+    "organic_nature": {
+      "principles": [
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "CIRCLE_PACKING_GROWTH",
+        "SWELL_DEFORMATION"
+      ],
+      "blend_mode": "ALPHA",
+      "colors": [
+        "#4CAF50",
+        "#8BC34A",
+        "#CDDC39"
+      ],
+      "description": "Growing, breathing, natural"
+    },
+    "technical_sci_fi": {
+      "principles": [
+        "NOISE_MASKED_GEOMETRY",
+        "VOXEL_GRID_THRESHOLD",
+        "WIREFRAME_OVERLAY_BLEND"
+      ],
+      "blend_mode": "ALPHA",
+      "colors": [
+        "#00BCD4",
+        "#0097A7",
+        "#006064"
+      ],
+      "description": "Clean, precise, futuristic"
+    },
+    "playful_fun": {
+      "principles": [
+        "DROP_RING_GRAVITY",
+        "HEART_GENERATIVE",
+        "TWO_FRAME_ANIMATION"
+      ],
+      "blend_mode": "ADD",
+      "colors": [
+        "#FFEB3B",
+        "#FF9800",
+        "#F44336"
+      ],
+      "description": "Bouncy, colorful, energetic"
+    },
+    "romantic_soft": {
+      "principles": [
+        "HEART_GENERATIVE",
+        "RIBBON_TWIST_DEFORM",
+        "SWELL_DEFORMATION"
+      ],
+      "blend_mode": "ALPHA",
+      "colors": [
+        "#F8BBD0",
+        "#F48FB1",
+        "#EC407A"
+      ],
+      "description": "Gentle, warm, intimate"
+    },
+    "claustrophobic_intense": {
+      "principles": [
+        "TUNNEL_PERSPECTIVE",
+        "RAMPAGING_TORUS_KNOT"
+      ],
+      "blend_mode": "SUBTRACT",
+      "colors": [
+        "#212121",
+        "#B71C1C",
+        "#000000"
+      ],
+      "description": "Confined, overwhelming, dark"
+    },
+    "chaotic_energetic": {
+      "principles": [
+        "RAMPAGING_TORUS_KNOT",
+        "ALTERNATE_TORUS_FLIP",
+        "DETERMINISTIC_FRAME_RANDOM"
+      ],
+      "blend_mode": "ADD",
+      "colors": [
+        "#FF5722",
+        "#FF9800",
+        "#FFC107"
+      ],
+      "description": "Wild, unpredictable, high energy"
+    }
+  },
+  "recommendation_logic": {
+    "input": "mood_keywords or emotional_description",
+    "processing": "fuzzy_match_to_mood_taxonomy",
+    "output": [
+      "sorted_principles",
+      "blend_mode",
+      "color_palette"
+    ]
+  }
+}

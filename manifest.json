@@ -1,0 +1,28 @@
+{
+  "name": "kiyoshi-weird-principles-repo",
+  "version": "1.0",
+  "description": "Structured database of unusual generative art techniques from Jun Kiyoshi",
+  "author": "Extracted from junkiyoshi.com",
+  "structure": {
+    "principles_dir": "principles/",
+    "shaders_dir": "shaders/glsl/",
+    "combinations_dir": "combinations/",
+    "examples_dir": "examples/",
+    "tools_dir": "tools/"
+  },
+  "entry_points": {
+    "readme": "README.md",
+    "database": "database.json",
+    "quickref": "QUICKREF.md"
+  },
+  "principles_count": 25,
+  "combinations_count": 12,
+  "total_files": 79,
+  "for_agent_automation": {
+    "principle_pattern": "principles/*.md",
+    "shader_pattern": "shaders/glsl/*.frag",
+    "database_schema": "database.json#/principles/0",
+    "bulk_import_tool": "tools/bulk_import.py",
+    "scraper_tool": "tools/scraper_template.py"
+  }
+}
