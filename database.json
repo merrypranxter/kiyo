@@ -1,0 +1,861 @@
+{
+  "meta": {
+    "version": "1.0",
+    "last_updated": "2025-01-18",
+    "total_principles": 25,
+    "total_combinations": 12,
+    "source_artist": "Jun Kiyoshi",
+    "source_url": "https://junkiyoshi.com/"
+  },
+  "principles": [
+    {
+      "id": "PROXIMITY_THRESHOLD_CONNECTION",
+      "name": "Proximity Threshold Connection",
+      "sketch": "Draw line when you get close",
+      "sketch_date": "2026-04-15",
+      "category": "Spatial",
+      "weird_factor": 7,
+      "core_mechanic": "Instead of physics-based attraction, use pure distance threshold to spawn connections between particles.",
+      "what_makes_it_weird": "No persistent graph structure - connections exist only in the moment of proximity, creating ephemeral network visualizations.",
+      "the_twist": "Lines only exist between points that happen to be close - no memory, no history, just momentary adjacency.",
+      "emotional_quality": "aggressive_cutting",
+      "glsl_key": "length(), step()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat dist = length(p1 - p2);\nfloat connect = step(dist, 0.02); // threshold\nvec3 color = mix(vec3(0), lineColor, connect);"
+      },
+      "variations": [
+        "Variable threshold based on particle size",
+        "Animated threshold (pulse over time)",
+        "Color-coded by distance",
+        "Curved lines instead of straight"
+      ],
+      "related": [
+        "VOXEL_GRID_THRESHOLD",
+        "CIRCLE_PACKING_GROWTH"
+      ],
+      "combinations": [
+        "PROXIMITY_NOISE",
+        "PROXIMITY_MOSAIC"
+      ]
+    },
+    {
+      "id": "MODULO_SPAWN_PHASE_SHIFT",
+      "name": "Modulo Spawn Phase Shift",
+      "sketch": "Ripple on ripple",
+      "sketch_date": "2026-04-10",
+      "category": "Temporal",
+      "weird_factor": 8,
+      "core_mechanic": "Particles spawn in polar coordinates with modulo timing, creating rhythmic birth cycles.",
+      "what_makes_it_weird": "Uses modulo arithmetic on frame number to create deterministic spawn waves instead of random or continuous spawning.",
+      "the_twist": "Dual-phase spawning where even/odd particles use different hue offsets creating interleaved color waves.",
+      "emotional_quality": "ethereal_ghostly",
+      "glsl_key": "mod(), floor()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat phase = mod(iTime * 10.0 + float(id % 2) * 225.0, 450.0);\nfloat hue = (id % 2 == 0) ? 0.0 : 128.0;"
+      },
+      "variations": [
+        "Triple or quadruple phase shifts",
+        "Prime number modulo values",
+        "Sine-modulated spawn rate",
+        "Random phase offset per burst"
+      ],
+      "related": [
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "DETERMINISTIC_FRAME_RANDOM"
+      ],
+      "combinations": [
+        "TWO_TONE_ECHO"
+      ]
+    },
+    {
+      "id": "BIDIRECTIONAL_ORBITAL_TRAILS",
+      "name": "Bidirectional Orbital Trails",
+      "sketch": "A missed connection",
+      "sketch_date": "2026-04-08",
+      "category": "Motion",
+      "weird_factor": 7,
+      "core_mechanic": "Particles move in opposite directions on concentric rings.",
+      "what_makes_it_weird": "Instead of all particles rotating the same direction, alternating rings (or random assignment) create counter-rotation.",
+      "the_twist": "Trails are drawn as overlapping circles, not lines - creating fat motion blur artifacts.",
+      "emotional_quality": "melancholic_yearning",
+      "glsl_key": "sign(), mod()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat dir = (mod(ring, 2.0) < 0.5) ? 1.0 : -1.0;\nfloat angle = iTime * speed * dir + ringOffset;\n// Trail as overlapping circles, not lines\nfor(float t = 0; t < 10; t++) {\n    float trailAngle = angle - t * 0.1 * dir;\n    drawCircle(polarToCartesian(trailAngle, radius), 5.0);\n}"
+      },
+      "variations": [
+        "Speed differential between directions",
+        "Gradual direction change over time",
+        "Varying trail circle sizes",
+        "Color per direction"
+      ],
+      "related": [
+        "TRAIL_HISTORY_BUFFER",
+        "ARROW_FIELD_FLOW"
+      ],
+      "combinations": [
+        "ROTATING_AQUARIUM",
+        "GRAVITY_WELL_ORBIT"
+      ]
+    },
+    {
+      "id": "NOISE_MASKED_GEOMETRY",
+      "name": "Noise Masked Geometry",
+      "sketch": "Sphere by triangles",
+      "sketch_date": "2026-04-05",
+      "category": "Geometry",
+      "weird_factor": 9,
+      "core_mechanic": "Use 3D noise to selectively render faces of geometry.",
+      "what_makes_it_weird": "Instead of culling by normal or frustum, Perlin noise decides which faces exist - creating organic erosion effects.",
+      "the_twist": "Inset triangles (scaled 0.6x toward centroid) create cut-out effect without boolean operations.",
+      "emotional_quality": "technical_sci_fi",
+      "glsl_key": "noise3D(), step()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat n = noise3D(centroid * scale);\nfloat visible = step(0.4, n) * (1.0 - step(0.6, n));\n// Inset triangle\nvec3 inset = mix(centroid, vertex, 0.6);\ngl_Position = visible > 0.5 ? projection * vec4(inset, 1) : vec4(0);"
+      },
+      "variations": [
+        "Animated noise (time-evolving mask)",
+        "Multi-octave noise masking",
+        "Inverted mask (render outside range)",
+        "Gradient threshold instead of binary"
+      ],
+      "related": [
+        "VOXEL_GRID_THRESHOLD",
+        "MOSAIC_RECONSTRUCTION"
+      ],
+      "combinations": [
+        "NOISE_GATE",
+        "TECHNICAL_CUTAWAY"
+      ]
+    },
+    {
+      "id": "FRAME_SYNCED_SPIRAL_SPAWN",
+      "name": "Frame Synced Spiral Spawn",
+      "sketch": "Uzumaki",
+      "sketch_date": "2026-04-01",
+      "category": "Temporal",
+      "weird_factor": 8,
+      "core_mechanic": "Spawn angle and radius derived directly from frame count.",
+      "what_makes_it_weird": "Birth coordinates are purely a function of time - deterministic spiral with no randomness in positioning.",
+      "the_twist": "Radius expands modulo 360 creating infinite outward spiral that loops but never repeats exactly.",
+      "emotional_quality": "organic_nature",
+      "glsl_key": "iTime, atan()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat angle = iTime * 14.4;\nfloat radius = mod(iTime * 3.0, 360.0);\nvec2 spawnPos = vec2(cos(angle), sin(angle)) * radius * 0.01;\n// Noise jitter for organic feel\nspawnPos += (noise2D(spawnPos + iTime) - 0.5) * 0.002;"
+      },
+      "variations": [
+        "Logarithmic spiral instead of linear",
+        "Multiple spiral arms",
+        "Fibonacci angle increments",
+        "Reverse direction inward spiral"
+      ],
+      "related": [
+        "MODULO_SPAWN_PHASE_SHIFT",
+        "DETERMINISTIC_FRAME_RANDOM"
+      ],
+      "combinations": [
+        "SPIRAL_RIBBON"
+      ]
+    },
+    {
+      "id": "DETERMINISTIC_FRAME_RANDOM",
+      "name": "Deterministic Frame Random",
+      "sketch": "Multiple sketches",
+      "sketch_date": "2026-03-20",
+      "category": "Pipeline",
+      "weird_factor": 9,
+      "core_mechanic": "Seed random number generator with frame number to get reproducible chaos.",
+      "what_makes_it_weird": "Randomness changes frame-to-frame but is reproducible within a frame - same seed always gives same 'random' values.",
+      "the_twist": "Allows deterministic glitch effects where things look random but follow a predictable cycle.",
+      "emotional_quality": "chaotic_controlled",
+      "glsl_key": "hash(), fract()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat hash(vec2 p) {\n    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);\n}\n// Seed with frame number\nfloat seededRandom = hash(vec2(float(id), iTime * 60.0));"
+      },
+      "variations": [
+        "Seed with mouse position too",
+        "Multi-parameter hash (id + frame + x + y)",
+        "Smooth noise instead of hash",
+        "Interpolate seed between frames"
+      ],
+      "related": [
+        "MODULO_SPAWN_PHASE_SHIFT",
+        "FRAME_SYNCED_SPIRAL_SPAWN"
+      ],
+      "combinations": [
+        "TWO_TONE_ECHO"
+      ]
+    },
+    {
+      "id": "STEPPED_LIFETIME_ALPHA",
+      "name": "Stepped Lifetime Alpha",
+      "sketch": "Multiple sketches",
+      "sketch_date": "2026-03-15",
+      "category": "Rendering",
+      "weird_factor": 6,
+      "core_mechanic": "Non-linear alpha mapping - full opacity for first half of life, then steep drop-off.",
+      "what_makes_it_weird": "Most fading uses linear or smoothstep - this creates a binary-then-linear curve that feels more decisive.",
+      "the_twist": "The sudden transition from fully opaque to fading creates a 'pop' effect that draws attention.",
+      "emotional_quality": "decisive_crisp",
+      "glsl_key": "smoothstep(), mix()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat life = age / maxAge;\nfloat alpha = life < 0.5 ? 1.0 : smoothstep(0.5, 1.0, life);\nalpha = 1.0 - alpha; // invert for fade out\ngl_FragColor.a *= alpha;"
+      },
+      "variations": [
+        "Adjust split point (0.3, 0.7)",
+        "Exponential drop-off",
+        "Stepped fade (3-4 discrete levels)",
+        "Size-linked instead of time-linked"
+      ],
+      "related": [
+        "BLEND_MODE_MOOD_MAPPING",
+        "VOXEL_GRID_THRESHOLD"
+      ],
+      "combinations": [
+        "TWO_TONE_ECHO"
+      ]
+    },
+    {
+      "id": "BLEND_MODE_MOOD_MAPPING",
+      "name": "Blend Mode Mood Mapping",
+      "sketch": "Ripple on ripple / Draw line when you get close",
+      "sketch_date": "2026-04-10",
+      "category": "Rendering",
+      "weird_factor": 7,
+      "core_mechanic": "Blend mode selection (ADD vs SUBTRACT) as primary aesthetic decision.",
+      "what_makes_it_weird": "Most artists treat blend mode as a secondary setting - Kiyoshi uses it as the main emotional signal.",
+      "the_twist": "ADD = ethereal/ghostly, SUBTRACT = aggressive/cutting - the blend mode IS the mood.",
+      "emotional_quality": "dual_nature",
+      "glsl_key": "glBlendFunc()",
+      "shader_translation": {
+        "glsl": "// Key snippet (conceptual - blend modes are GL state):\n// ADD mode: glBlendFunc(GL_ONE, GL_ONE)\n// Result: src + dest (ethereal glow)\n\n// SUBTRACT mode: glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR)\n// Result: dest - src (aggressive cutting)\n\n// In shader, emulate ADD:\nvec4 addBlend = src + dest;\n// Emulate SUBTRACT:\nvec4 subBlend = dest - src;"
+      },
+      "variations": [
+        "Switch blend modes mid-sketch",
+        "Blend mode per particle layer",
+        "Multiplicative for dark moods",
+        "Screen blend for soft light"
+      ],
+      "related": [
+        "STEPPED_LIFETIME_ALPHA",
+        "WIREFRAME_OVERLAY_BLEND"
+      ],
+      "combinations": [
+        "TWO_TONE_ECHO"
+      ]
+    },
+    {
+      "id": "VOXEL_GRID_THRESHOLD",
+      "name": "Voxel Grid Threshold",
+      "sketch": "Voxel grid",
+      "sketch_date": "2026-03-10",
+      "category": "Spatial",
+      "weird_factor": 7,
+      "core_mechanic": "3D grid where noise value determines if a voxel is rendered.",
+      "what_makes_it_weird": "Instead of placing voxels by hand or with physics, noise creates the structure - emergent architecture.",
+      "the_twist": "Threshold creates sharp edges in otherwise smooth noise, making architectural forms appear.",
+      "emotional_quality": "technical_sci_fi",
+      "glsl_key": "fract(), noise3D()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvec3 gridPos = floor(worldPos * gridScale);\nfloat n = noise3D(gridPos * 0.1);\nfloat exists = step(0.5, n);\n// Only render if noise > threshold\nif (exists > 0.5) {\n    renderCube(gridPos / gridScale);\n}"
+      },
+      "variations": [
+        "Multiple threshold layers",
+        "Animated noise (shifting structure)",
+        "Different voxel sizes per threshold band",
+        "Color by threshold value"
+      ],
+      "related": [
+        "NOISE_MASKED_GEOMETRY",
+        "CIRCLE_PACKING_GROWTH"
+      ],
+      "combinations": [
+        "NOISE_GATE",
+        "TORUS_VOXELIZER"
+      ]
+    },
+    {
+      "id": "TRAIL_HISTORY_BUFFER",
+      "name": "Trail History Buffer",
+      "sketch": "Trail sketches",
+      "sketch_date": "2026-03-05",
+      "category": "Motion",
+      "weird_factor": 6,
+      "core_mechanic": "Ring buffer of previous positions to create motion trails.",
+      "what_makes_it_weird": "Instead of simple motion blur, discrete historical positions create segmented trails.",
+      "the_twist": "Each segment can have different properties (size, color, alpha) creating gradient trails.",
+      "emotional_quality": "nostalgic_tracing",
+      "glsl_key": "array, iFrame",
+      "shader_translation": {
+        "glsl": "// Key snippet (conceptual - requires SSBO or texture):\nuniform sampler2D trailBuffer;\n// Store position in ring buffer\nint idx = int(mod(iFrame, TRAIL_LENGTH));\n// Read previous positions for trail\nfor(int i = 0; i < TRAIL_LENGTH; i++) {\n    vec2 trailPos = texelFetch(trailBuffer, ivec2(i, id), 0).xy;\n    float fade = 1.0 - float(i) / float(TRAIL_LENGTH);\n    drawPoint(trailPos, fade * size);\n}"
+      },
+      "variations": [
+        "Variable trail length per particle",
+        "Catmull-Rom spline through history",
+        "Color gradient along trail",
+        "Trails that persist after particle dies"
+      ],
+      "related": [
+        "BIDIRECTIONAL_ORBITAL_TRAILS",
+        "ARROW_FIELD_FLOW"
+      ],
+      "combinations": [
+        "ROTATING_AQUARIUM"
+      ]
+    },
+    {
+      "id": "WIREFRAME_OVERLAY_BLEND",
+      "name": "Wireframe Overlay Blend",
+      "sketch": "Wireframe sketches",
+      "sketch_date": "2026-02-28",
+      "category": "Rendering",
+      "weird_factor": 6,
+      "core_mechanic": "Triangle edge overlay on solid geometry.",
+      "what_makes_it_weird": "Technical drawing aesthetic combined with organic forms - blueprint meets biology.",
+      "the_twist": "Wireframe uses different blend mode than solid, creating layered depth.",
+      "emotional_quality": "technical_sci_fi",
+      "glsl_key": "fwidth(), edgeDetect",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvec3 d = fwidth(barycentric);\nvec3 edge = smoothstep(vec3(0.0), d * 1.5, barycentric);\nfloat edgeFactor = min(min(edge.x, edge.y), edge.z);\nvec3 wireframe = mix(vec3(1.0), solidColor, edgeFactor);"
+      },
+      "variations": [
+        "Animated wireframe pulse",
+        "Wireframe only on noise-selected faces",
+        "Different wire colors per face group",
+        "Wireframe thickness by depth"
+      ],
+      "related": [
+        "BLEND_MODE_MOOD_MAPPING",
+        "NOISE_MASKED_GEOMETRY"
+      ],
+      "combinations": [
+        "TECHNICAL_CUTAWAY"
+      ]
+    },
+    {
+      "id": "FFMPEG_CAPTURE_PIPELINE",
+      "name": "FFMPEG Capture Pipeline",
+      "sketch": "Meta-technique",
+      "sketch_date": "2016-12-16",
+      "category": "Pipeline",
+      "weird_factor": 5,
+      "core_mechanic": "Capture frames and encode to video using FFMPEG.",
+      "what_makes_it_weird": "The capture process itself becomes part of the workflow - frame-perfect recording.",
+      "the_twist": "Using named pipes or raw frame dumping for lossless capture before compression.",
+      "emotional_quality": "meta_production",
+      "glsl_key": "N/A - external tool",
+      "shader_translation": {
+        "glsl": "// Not a shader technique - pipeline step\n// Typically: save frame buffer each frame, then:\n// ffmpeg -framerate 30 -i frame_%04d.png -c:v libx264 output.mp4"
+      },
+      "variations": [
+        "Real-time streaming capture",
+        "Variable frame rate capture",
+        "Multi-pass render then encode",
+        "Capture at higher res than display"
+      ],
+      "related": [
+        "DETERMINISTIC_FRAME_RANDOM"
+      ],
+      "combinations": []
+    },
+    {
+      "id": "DROP_RING_GRAVITY",
+      "name": "Drop Ring Gravity",
+      "sketch": "Drop ring",
+      "sketch_date": "2025-04-06",
+      "category": "Physics",
+      "weird_factor": 7,
+      "core_mechanic": "Rings fall under gravity and stack/collide with each other.",
+      "what_makes_it_weird": "Simple rigid body stacking but with rings (hollow objects) creates unexpected wobble and roll behaviors.",
+      "the_twist": "Rings can tilt and roll off each other rather than just stacking flat - emergent physics.",
+      "emotional_quality": "playful_fun",
+      "glsl_key": "gravity, collision",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvelocity.y -= gravity * dt;\n// Ring-ring collision: check distance between centers\n// vs sum of radii, apply impulse\nfloat dist = length(ringA.center - ringB.center);\nfloat overlap = (ringA.radius + ringB.radius) - dist;\nif(overlap > 0) {\n    vec2 normal = normalize(ringA.center - ringB.center);\n    ringA.velocity += normal * overlap * stiffness;\n}"
+      },
+      "variations": [
+        "Different ring sizes",
+        "Rotational physics (spin when hit)",
+        "Multiple gravity sources",
+        "Rings that shatter on hard impact"
+      ],
+      "related": [
+        "BIDIRECTIONAL_ORBITAL_TRAILS"
+      ],
+      "combinations": [
+        "GRAVITY_WELL_ORBIT",
+        "ARROW_GRAVITY"
+      ]
+    },
+    {
+      "id": "HEART_GENERATIVE",
+      "name": "Generative Heart",
+      "sketch": "Heart on heart",
+      "sketch_date": "2025-06-18",
+      "category": "Shape",
+      "weird_factor": 6,
+      "core_mechanic": "Parametric heart shape generation.",
+      "what_makes_it_weird": "Uses parametric equations to create organic heart shapes rather than loaded models.",
+      "the_twist": "Multiple overlapping hearts with slight parameter variations create moire patterns.",
+      "emotional_quality": "romantic_soft",
+      "glsl_key": "pow(), sin()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat heartSDF(vec2 p) {\n    p.y = -p.y;\n    vec2 q = vec2(p.x, p.y);\n    float a = q.x * q.x + q.y * q.y - 0.25;\n    return a * a * a - q.x * q.x * q.y * q.y * q.y;\n}\n// Parametric:\nfloat t = iTime;\nvec2 heartPos = vec2(16*pow(sin(t),3), 13*cos(t)-5*cos(2*t)-2*cos(3*t)-cos(4*t)) * 0.01;"
+      },
+      "variations": [
+        "Beating animation (scale pulse)",
+        "Hearts made of particles",
+        "Broken/shattered hearts",
+        "Hearts that morph into other shapes"
+      ],
+      "related": [
+        "SWELL_DEFORMATION"
+      ],
+      "combinations": [
+        "STROBE_HEARTBEAT"
+      ]
+    },
+    {
+      "id": "TUNNEL_PERSPECTIVE",
+      "name": "Tunnel Perspective",
+      "sketch": "Tunnel",
+      "sketch_date": "2025-07-15",
+      "category": "Spatial",
+      "weird_factor": 7,
+      "core_mechanic": "Z-depth sprite scaling to create tunnel effect.",
+      "what_makes_it_weird": "Simple 2D sprites with perspective divide create convincing 3D tunnel without actual 3D geometry.",
+      "the_twist": "Objects at center appear closer, edge objects farther - inverse of normal perspective.",
+      "emotional_quality": "claustrophobic_intense",
+      "glsl_key": "perspective divide",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat z = fract(iTime * speed + objectId * spacing);\nfloat scale = 1.0 / (z + 0.1);\nvec2 pos = (worldPos - 0.5) * scale + 0.5;\nfloat alpha = smoothstep(0, 0.1, z) * smoothstep(1.0, 0.9, z);\n// Draw sprite at pos with scale and alpha"
+      },
+      "variations": [
+        "Curved tunnel paths",
+        "Multiple tunnel layers",
+        "Rotating tunnel walls",
+        "Speed variation along tunnel"
+      ],
+      "related": [
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "VOXEL_GRID_THRESHOLD"
+      ],
+      "combinations": [
+        "ROTATING_AQUARIUM",
+        "HEX_TUNNEL"
+      ]
+    },
+    {
+      "id": "SWELL_DEFORMATION",
+      "name": "Swell Deformation",
+      "sketch": "Swell",
+      "sketch_date": "2026-03-30",
+      "category": "Deformation",
+      "weird_factor": 8,
+      "core_mechanic": "Inflate mesh over time using sine-based displacement.",
+      "what_makes_it_weird": "Organic breathing-like motion applied to any geometry - makes rigid objects feel alive.",
+      "the_twist": "Displacement follows surface normal but amplitude varies by vertex noise value.",
+      "emotional_quality": "breathing_living",
+      "glsl_key": "sin(), length()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat swell = sin(iTime * frequency + noise3D(position) * 5.0) * 0.5 + 0.5;\nvec3 displaced = position + normal * swell * maxDisplacement;\ngl_Position = projection * modelView * vec4(displaced, 1.0);"
+      },
+      "variations": [
+        "Multiple frequency\u53e0\u52a0",
+        "Radial falloff from center",
+        "Noise-driven instead of sine",
+        "Explosive swell (rapid inflate)"
+      ],
+      "related": [
+        "HEART_GENERATIVE",
+        "RAMPAGING_TORUS_KNOT"
+      ],
+      "combinations": [
+        "TEXTUAL_SWELL"
+      ]
+    },
+    {
+      "id": "TWO_FRAME_ANIMATION",
+      "name": "Two Frame Animation",
+      "sketch": "2 frame",
+      "sketch_date": "2025-12-29",
+      "category": "Animation",
+      "weird_factor": 8,
+      "core_mechanic": "Flip between two states to create strobe-like animation.",
+      "what_makes_it_weird": "Only 2 frames - no in-between - creating harsh digital aesthetic.",
+      "the_twist": "The two frames can be completely different (not just A/B of same motion).",
+      "emotional_quality": "retro_digital",
+      "glsl_key": "fract(iTime) > 0.5",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nbool frameA = fract(iTime * 4.0) < 0.5;\nvec3 color = frameA ? renderStateA(uv) : renderStateB(uv);\n// States can be completely different\n// Creates harsh cut, no interpolation"
+      },
+      "variations": [
+        "Uneven timing (70/30 split)",
+        "More than 2 frames (3, 4)",
+        "Random frame selection",
+        "Frame rate independent of display"
+      ],
+      "related": [
+        "DETERMINISTIC_FRAME_RANDOM",
+        "MODULO_SPAWN_PHASE_SHIFT"
+      ],
+      "combinations": [
+        "STROBE_HEARTBEAT"
+      ]
+    },
+    {
+      "id": "PRINT_TEXT_GENERATIVE",
+      "name": "Generative Text",
+      "sketch": "PRINT 10",
+      "sketch_date": "2025-07-01",
+      "category": "Typography",
+      "weird_factor": 7,
+      "core_mechanic": "Text as generative geometry source.",
+      "what_makes_it_weird": "Letters aren't rendered as text but converted to geometry that can be manipulated.",
+      "the_twist": "Text outlines become particle emitters or mesh boundaries.",
+      "emotional_quality": "loud_bold",
+      "glsl_key": "text SDF",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat textSDF(vec2 uv, int letter) {\n    // SDF for letter shape\n    return distance to letter boundary;\n}\n// Use text as mask\nfloat inText = step(0, textSDF(uv, letter));\n// Or emit particles from text edges\nvec2 emitPos = textEdgePosition(letter, random);"
+      },
+      "variations": [
+        "Text morphing between words",
+        "Particles flowing along letter paths",
+        "3D extruded text with noise",
+        "Text deforming like liquid"
+      ],
+      "related": [
+        "SWELL_DEFORMATION",
+        "MOSAIC_RECONSTRUCTION"
+      ],
+      "combinations": [
+        "TEXTUAL_SWELL"
+      ]
+    },
+    {
+      "id": "RAMPAGING_TORUS_KNOT",
+      "name": "Rampaging Torus Knot",
+      "sketch": "Rampaging torus",
+      "sketch_date": "2023-03-24",
+      "category": "3D Topology",
+      "weird_factor": 9,
+      "core_mechanic": "Chaotic parameters on torus knot creating unstable forms.",
+      "what_makes_it_weird": "Torus knot parameters (p, q) animated with noise instead of fixed - topology becomes fluid.",
+      "the_twist": "The knot can self-intersect and unravel in ways physical string couldn't.",
+      "emotional_quality": "chaotic_energetic",
+      "glsl_key": "cos(), sin(), mod()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nfloat p = 2.0 + noise1D(iTime * 0.5) * 3.0;\nfloat q = 3.0 + noise1D(iTime * 0.3 + 100) * 2.0;\nfloat r = cos(q * theta) + 2.0;\nvec3 pos = vec3(r * cos(p * theta), r * sin(p * theta), -sin(q * theta));"
+      },
+      "variations": [
+        "Extreme p/q values (wild shapes)",
+        "Multiple overlapping knots",
+        "Knot trail (history of positions)",
+        "Knot as particle emitter"
+      ],
+      "related": [
+        "ALTERNATE_TORUS_FLIP",
+        "SWELL_DEFORMATION"
+      ],
+      "combinations": [
+        "TORUS_VOXELIZER"
+      ]
+    },
+    {
+      "id": "ALTERNATE_TORUS_FLIP",
+      "name": "Alternate Torus Flip",
+      "sketch": "Alternate torus",
+      "sketch_date": "2023-09-12",
+      "category": "3D Topology",
+      "weird_factor": 9,
+      "core_mechanic": "Inside-out surface rendering of torus.",
+      "what_makes_it_weird": "Flips face normals so you see the 'inside' of the surface - impossible in physical reality.",
+      "the_twist": "Can alternate which faces point outward based on noise or position, creating patchwork surfaces.",
+      "emotional_quality": "mind_bending",
+      "glsl_key": "face normal flip",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvec3 normal = calculateNormal(position);\n// Flip based on noise\nfloat flip = step(0.5, noise3D(position * 2.0));\nnormal *= mix(1.0, -1.0, flip);\n// Or flip entire geometry\ngl_FrontFacing = !gl_FrontFacing;\n// Emulate in shader:\nvec3 viewDir = normalize(cameraPos - position);\nfloat facing = dot(normal, viewDir);\nif(facing < 0) normal = -normal;"
+      },
+      "variations": [
+        "Gradual flip (transition zone)",
+        "Flip based on viewing angle",
+        "Partial flip (some faces, not all)",
+        "Animated flip over time"
+      ],
+      "related": [
+        "RAMPAGING_TORUS_KNOT",
+        "NOISE_MASKED_GEOMETRY"
+      ],
+      "combinations": [
+        "TORUS_VOXELIZER"
+      ]
+    },
+    {
+      "id": "HEXAGONAL_TILE_MORPH",
+      "name": "Hexagonal Tile Morph",
+      "sketch": "Hexagon sketches",
+      "sketch_date": "2025-08-20",
+      "category": "Geometry",
+      "weird_factor": 7,
+      "core_mechanic": "Hexagonal grid with deformation.",
+      "what_makes_it_weird": "Regular hex grid combined with organic displacement creates crystal-meets-nature aesthetic.",
+      "the_twist": "Individual hexes can rotate, scale, and translate independently while maintaining grid adjacency.",
+      "emotional_quality": "crystalline_ordered",
+      "glsl_key": "hexSDF(), mix()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvec2 hexUV = hexGrid(uv * 10.0);\nfloat hexDist = hexSDF(hexUV);\n// Deform based on noise\nfloat deform = noise3D(vec3(hexCenter, iTime * 0.1));\nvec2 displaced = hexCenter + hexUV * (1.0 + deform * 0.3);\nfloat hex = smoothstep(0.1, 0.0, hexDist);"
+      },
+      "variations": [
+        "Hex to circle morph",
+        "Height displacement (3D hex columns)",
+        "Color by hex neighbor count",
+        "Hex shatter/fracture"
+      ],
+      "related": [
+        "MOSAIC_RECONSTRUCTION",
+        "VOXEL_GRID_THRESHOLD"
+      ],
+      "combinations": [
+        "HEX_TUNNEL"
+      ]
+    },
+    {
+      "id": "CIRCLE_PACKING_GROWTH",
+      "name": "Circle Packing Growth",
+      "sketch": "Circle packing sketches",
+      "sketch_date": "2025-09-15",
+      "category": "Spatial",
+      "weird_factor": 6,
+      "core_mechanic": "Circles grow from seeds until they touch another circle.",
+      "what_makes_it_weird": "Simple collision-based growth creates organic packing patterns similar to cells or bubbles.",
+      "the_twist": "New seeds spawn in gaps between existing circles, filling space optimally.",
+      "emotional_quality": "organic_nature",
+      "glsl_key": "distance(), max()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\n// For each circle\nfor(int i = 0; i < circleCount; i++) {\n    float d = length(uv - circles[i].center);\n    // Grow until hitting neighbor\n    circles[i].radius += growthRate;\n    // Check collision with all other circles\n    for(int j = 0; j < circleCount; j++) {\n        if(i == j) continue;\n        float minDist = circles[i].radius + circles[j].radius;\n        float actualDist = length(circles[i].center - circles[j].center);\n        if(actualDist < minDist) {\n            circles[i].radius = actualDist - circles[j].radius;\n        }\n    }\n}"
+      },
+      "variations": [
+        "Variable growth rates",
+        "Shrinking/growing oscillation",
+        "Color by size or age",
+        "Limited lifespan (die and free space)"
+      ],
+      "related": [
+        "PROXIMITY_THRESHOLD_CONNECTION",
+        "VOXEL_GRID_THRESHOLD"
+      ],
+      "combinations": [
+        "PROXIMITY_MOSAIC"
+      ]
+    },
+    {
+      "id": "MOSAIC_RECONSTRUCTION",
+      "name": "Mosaic Reconstruction",
+      "sketch": "Mosaic sketches",
+      "sketch_date": "2025-10-05",
+      "category": "Geometry",
+      "weird_factor": 7,
+      "core_mechanic": "Tiles assemble from scattered positions to form an image.",
+      "what_makes_it_weird": "Reverse destruction - pieces come together rather than falling apart.",
+      "the_twist": "Each tile takes a unique path to its destination, creating choreographed assembly.",
+      "emotional_quality": "satisfying_assembly",
+      "glsl_key": "floor(), fract()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\nvec2 tileId = floor(uv * tileCount);\nvec2 tileUV = fract(uv * tileCount);\n// Scattered position based on tileId hash\nvec2 scatter = hash2(tileId) * 2.0 - 1.0;\n// Assembly progress\nfloat assemble = smoothstep(0, 1, iTime * 0.1);\nvec2 finalPos = mix(scatter, tileId / tileCount, assemble);\n// Rotation during assembly\nfloat rotation = (1.0 - assemble) * PI * hash1(tileId);"
+      },
+      "variations": [
+        "Disassembly instead of assembly",
+        "Different easing per tile",
+        "3D tiles (flip into place)",
+        "Color bleeding between tiles"
+      ],
+      "related": [
+        "HEXAGONAL_TILE_MORPH",
+        "NOISE_MASKED_GEOMETRY"
+      ],
+      "combinations": [
+        "PROXIMITY_MOSAIC",
+        "TECHNICAL_CUTAWAY"
+      ]
+    },
+    {
+      "id": "ARROW_FIELD_FLOW",
+      "name": "Arrow Field Flow",
+      "sketch": "Arrow sketches",
+      "sketch_date": "2025-11-12",
+      "category": "Motion",
+      "weird_factor": 6,
+      "core_mechanic": "Grid of arrows that rotate to point toward a target.",
+      "what_makes_it_weird": "Simple directional indicators create emergent flow field visualization.",
+      "the_twist": "Arrows can point toward multiple targets with weighted influence, creating interference patterns.",
+      "emotional_quality": "directed_energy",
+      "glsl_key": "atan(), mix()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\n// For each arrow at grid position\nvec2 toTarget = target - arrowPos;\nfloat targetAngle = atan(toTarget.y, toTarget.x);\n// Smooth rotation\nfloat angle = mix(arrowAngle, targetAngle, rotationSpeed);\n// Multiple targets\nfor(int t = 0; t < targetCount; t++) {\n    float weight = 1.0 / length(targets[t] - arrowPos);\n    targetAngle += atan(targets[t].y - arrowPos.y, targets[t].x - arrowPos.x) * weight;\n}"
+      },
+      "variations": [
+        "Arrow length by field strength",
+        "Color gradient along field lines",
+        "Animated wobble on direction",
+        "Particles that follow arrows"
+      ],
+      "related": [
+        "TRAIL_HISTORY_BUFFER",
+        "FRAME_SYNCED_SPIRAL_SPAWN"
+      ],
+      "combinations": [
+        "ARROW_GRAVITY"
+      ]
+    },
+    {
+      "id": "RIBBON_TWIST_DEFORM",
+      "name": "Ribbon Twist Deformation",
+      "sketch": "Ribbon sketches",
+      "sketch_date": "2025-12-01",
+      "category": "Deformation",
+      "weird_factor": 7,
+      "core_mechanic": "Twist a flat ribbon along its path.",
+      "what_makes_it_weird": "Simple 2D ribbon becomes 3D through progressive rotation along its length.",
+      "the_twist": "Twist amount can vary along the ribbon, creating sections of flat and twisted.",
+      "emotional_quality": "flowing_graceful",
+      "glsl_key": "cross(), rotate()",
+      "shader_translation": {
+        "glsl": "// Key snippet:\n// Ribbon defined by curve + twist\nvec3 curve = bezier(p, controlPoints);\nvec3 tangent = normalize(bezierTangent(p, controlPoints));\nfloat twist = p * twistAmount + iTime;\nvec3 normal = vec3(cos(twist), sin(twist), 0);\n// Make normal perpendicular to tangent\nnormal = normalize(normal - dot(normal, tangent) * tangent);\nvec3 binormal = cross(tangent, normal);\n// Ribbon width\nvec3 vertex = curve + normal * width * side;"
+      },
+      "variations": [
+        "Progressive twist (more at end)",
+        "Sine wave along ribbon edge",
+        "Variable width",
+        "Multiple ribbon strands"
+      ],
+      "related": [
+        "SWELL_DEFORMATION",
+        "BIDIRECTIONAL_ORBITAL_TRAILS"
+      ],
+      "combinations": [
+        "SPIRAL_RIBBON"
+      ]
+    }
+  ],
+  "combinations": [
+    {
+      "id": "PROXIMITY_NOISE",
+      "name": "Noise-Gated Connections",
+      "ingredients": [
+        "PROXIMITY_THRESHOLD_CONNECTION",
+        "NOISE_MASKED_GEOMETRY"
+      ],
+      "result": "Lines only form in noise-threshold zones - organic network growth",
+      "glsl_hint": "Combine proximity check with noise mask"
+    },
+    {
+      "id": "TWO_TONE_ECHO",
+      "name": "Two-Tone Echo",
+      "ingredients": [
+        "MODULO_SPAWN_PHASE_SHIFT",
+        "STEPPED_LIFETIME_ALPHA"
+      ],
+      "result": "Dual-phase ripples with stepped fade - ethereal echo effect",
+      "glsl_hint": "Interleave two spawn phases, apply stepped alpha"
+    },
+    {
+      "id": "ROTATING_AQUARIUM",
+      "name": "Rotating Aquarium",
+      "ingredients": [
+        "BIDIRECTIONAL_ORBITAL_TRAILS",
+        "TUNNEL_PERSPECTIVE"
+      ],
+      "result": "Counter-rotating rings inside a perspective tunnel",
+      "glsl_hint": "Orbital motion inside tunnel depth"
+    },
+    {
+      "id": "TECHNICAL_CUTAWAY",
+      "name": "Technical Cutaway",
+      "ingredients": [
+        "WIREFRAME_OVERLAY_BLEND",
+        "NOISE_MASKED_GEOMETRY"
+      ],
+      "result": "Blueprint + selective reveal - technical documentation aesthetic",
+      "glsl_hint": "Wireframe overlay on noise-masked geometry"
+    },
+    {
+      "id": "GRAVITY_WELL_ORBIT",
+      "name": "Gravity Well Orbit",
+      "ingredients": [
+        "DROP_RING_GRAVITY",
+        "BIDIRECTIONAL_ORBITAL_TRAILS"
+      ],
+      "result": "Rings that attract and repel in orbital patterns",
+      "glsl_hint": "Combine gravity with orbital mechanics"
+    },
+    {
+      "id": "STROBE_HEARTBEAT",
+      "name": "Strobe Heartbeat",
+      "ingredients": [
+        "TWO_FRAME_ANIMATION",
+        "HEART_GENERATIVE"
+      ],
+      "result": "Pulsing generative heart with harsh strobe cuts",
+      "glsl_hint": "Flip between heart states"
+    },
+    {
+      "id": "TEXTUAL_SWELL",
+      "name": "Textual Swell",
+      "ingredients": [
+        "PRINT_TEXT_GENERATIVE",
+        "SWELL_DEFORMATION"
+      ],
+      "result": "Typography that inflates and breathes",
+      "glsl_hint": "Apply swell displacement to text geometry"
+    },
+    {
+      "id": "TORUS_VOXELIZER",
+      "name": "Torus Voxelizer",
+      "ingredients": [
+        "RAMPAGING_TORUS_KNOT",
+        "VOXEL_GRID_THRESHOLD"
+      ],
+      "result": "3D printed torus knots as voxel structures",
+      "glsl_hint": "Voxelize torus SDF"
+    },
+    {
+      "id": "PROXIMITY_MOSAIC",
+      "name": "Proximity Mosaic",
+      "ingredients": [
+        "PROXIMITY_THRESHOLD_CONNECTION",
+        "MOSAIC_RECONSTRUCTION"
+      ],
+      "result": "Tiles connect by nearness before assembling",
+      "glsl_hint": "Proximity triggers tile connections"
+    },
+    {
+      "id": "SPIRAL_RIBBON",
+      "name": "Spiral Ribbon",
+      "ingredients": [
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "RIBBON_TWIST_DEFORM"
+      ],
+      "result": "Twisted ribbon follows spiral path",
+      "glsl_hint": "Ribbon along spiral trajectory"
+    },
+    {
+      "id": "HEX_TUNNEL",
+      "name": "Hex Tunnel",
+      "ingredients": [
+        "HEXAGONAL_TILE_MORPH",
+        "TUNNEL_PERSPECTIVE"
+      ],
+      "result": "Hexagonal perspective tunnel",
+      "glsl_hint": "Hex grid in tunnel depth"
+    },
+    {
+      "id": "ARROW_GRAVITY",
+      "name": "Arrow Gravity",
+      "ingredients": [
+        "ARROW_FIELD_FLOW",
+        "DROP_RING_GRAVITY"
+      ],
+      "result": "Directional gravity flow visualization",
+      "glsl_hint": "Arrows show gravity field direction"
+    }
+  ]
+}

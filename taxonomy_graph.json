@@ -1,0 +1,164 @@
+{
+  "categories": {
+    "Spatial": {
+      "description": "Techniques based on position and distance relationships",
+      "principles": [
+        "PROXIMITY_THRESHOLD_CONNECTION",
+        "VOXEL_GRID_THRESHOLD",
+        "TUNNEL_PERSPECTIVE",
+        "CIRCLE_PACKING_GROWTH"
+      ],
+      "color": "#4FC3F7"
+    },
+    "Temporal": {
+      "description": "Time-based and rhythmic techniques",
+      "principles": [
+        "MODULO_SPAWN_PHASE_SHIFT",
+        "FRAME_SYNCED_SPIRAL_SPAWN",
+        "DETERMINISTIC_FRAME_RANDOM",
+        "TWO_FRAME_ANIMATION"
+      ],
+      "color": "#FF8A65"
+    },
+    "Motion": {
+      "description": "Movement and trail techniques",
+      "principles": [
+        "BIDIRECTIONAL_ORBITAL_TRAILS",
+        "TRAIL_HISTORY_BUFFER",
+        "ARROW_FIELD_FLOW"
+      ],
+      "color": "#A5D6A7"
+    },
+    "Geometry": {
+      "description": "Shape generation and manipulation",
+      "principles": [
+        "NOISE_MASKED_GEOMETRY",
+        "HEXAGONAL_TILE_MORPH",
+        "MOSAIC_RECONSTRUCTION"
+      ],
+      "color": "#CE93D8"
+    },
+    "Rendering": {
+      "description": "Visual output and compositing techniques",
+      "principles": [
+        "STEPPED_LIFETIME_ALPHA",
+        "BLEND_MODE_MOOD_MAPPING",
+        "WIREFRAME_OVERLAY_BLEND"
+      ],
+      "color": "#FFF59D"
+    },
+    "Physics": {
+      "description": "Simulation and physical behavior",
+      "principles": [
+        "DROP_RING_GRAVITY"
+      ],
+      "color": "#EF9A9A"
+    },
+    "Shape": {
+      "description": "Parametric and generative shape creation",
+      "principles": [
+        "HEART_GENERATIVE",
+        "PRINT_TEXT_GENERATIVE"
+      ],
+      "color": "#F48FB1"
+    },
+    "Deformation": {
+      "description": "Mesh and surface distortion",
+      "principles": [
+        "SWELL_DEFORMATION",
+        "RIBBON_TWIST_DEFORM"
+      ],
+      "color": "#80CBC4"
+    },
+    "3D Topology": {
+      "description": "Three-dimensional surface and volume techniques",
+      "principles": [
+        "RAMPAGING_TORUS_KNOT",
+        "ALTERNATE_TORUS_FLIP"
+      ],
+      "color": "#BCAAA4"
+    },
+    "Pipeline": {
+      "description": "Production and workflow techniques",
+      "principles": [
+        "DETERMINISTIC_FRAME_RANDOM",
+        "FFMPEG_CAPTURE_PIPELINE"
+      ],
+      "color": "#B0BEC5"
+    }
+  },
+  "cross_category_links": [
+    {
+      "from": "Spatial",
+      "to": "Geometry",
+      "strength": 0.7
+    },
+    {
+      "from": "Temporal",
+      "to": "Motion",
+      "strength": 0.8
+    },
+    {
+      "from": "Rendering",
+      "to": "Geometry",
+      "strength": 0.6
+    },
+    {
+      "from": "Physics",
+      "to": "Motion",
+      "strength": 0.9
+    },
+    {
+      "from": "Deformation",
+      "to": "Geometry",
+      "strength": 0.8
+    },
+    {
+      "from": "3D Topology",
+      "to": "Spatial",
+      "strength": 0.7
+    }
+  ],
+  "coordinates": {
+    "Spatial": {
+      "x": 200,
+      "y": 100
+    },
+    "Temporal": {
+      "x": 400,
+      "y": 50
+    },
+    "Motion": {
+      "x": 600,
+      "y": 150
+    },
+    "Geometry": {
+      "x": 300,
+      "y": 300
+    },
+    "Rendering": {
+      "x": 100,
+      "y": 250
+    },
+    "Physics": {
+      "x": 500,
+      "y": 350
+    },
+    "Shape": {
+      "x": 700,
+      "y": 300
+    },
+    "Deformation": {
+      "x": 200,
+      "y": 450
+    },
+    "3D Topology": {
+      "x": 450,
+      "y": 450
+    },
+    "Pipeline": {
+      "x": 650,
+      "y": 450
+    }
+  }
+}
